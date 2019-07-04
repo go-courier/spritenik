@@ -1,4 +1,4 @@
-package sprite
+package spritenik
 
 import (
 	"errors"

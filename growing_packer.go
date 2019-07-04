@@ -1,4 +1,4 @@
-package sprite
+package spritenik
 
 // code and blog from https://github.com/jakesgordon/bin-packing
 func NewNode(name string, width, height int) *Node {
