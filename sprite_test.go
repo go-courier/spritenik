@@ -1,7 +1,6 @@
 package sprite
 
 import (
-	"bytes"
 	"fmt"
 	"image"
 	"image/color"
@@ -36,14 +35,9 @@ func TestGenerateSprite(t *testing.T) {
 		addLabel(img, 2, 10, fmt.Sprintf("%s@%dx", name, pixelRatio))
 		addLabel(img, 2, 20, fmt.Sprintf("%d,%d", size, size))
 
-		buf := bytes.NewBuffer(nil)
-		png.Encode(buf, img)
-
 		textures = append(textures, &TextureTest{
 			SymbolName: name,
-			Width:      size,
-			Height:     size,
-			Binary:     buf.Bytes(),
+			Image:      img,
 			PixelRatio: pixelRatio,
 		})
 	}
@@ -77,10 +71,8 @@ func addLabel(img *image.RGBA, x, y int, label string) {
 
 type TextureTest struct {
 	SymbolName string
-	Width      int
-	Height     int
-	Binary     []byte
 	PixelRatio int
+	image.Image
 }
 
 func (m *TextureTest) TexturePixelRatio() int {
@@ -91,17 +83,8 @@ func (m *TextureTest) TextureName() string {
 	return m.SymbolName
 }
 
-func (m *TextureTest) TextureWidth() int {
-	return m.Width
-}
-
-func (m *TextureTest) TextureHeight() int {
-	return m.Height
-}
-
 func (m *TextureTest) TextureImage() image.Image {
-	img, _ := png.Decode(bytes.NewBuffer(m.Binary))
-	return img
+	return m.Image
 }
 
 func SavePNG(path string, img image.Image) {

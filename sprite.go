@@ -20,17 +20,20 @@ func GenerateSprite(textures []Texture, pixelRatio int, renderImage bool) (map[s
 	for i := range textures {
 		t := textures[i]
 
+		img := t.TextureImage()
+		size := img.Bounds().Size()
+
 		tm := &TextureMeta{
 			Name:       t.TextureName(),
-			Width:      t.TextureWidth(),
-			Height:     t.TextureHeight(),
 			PixelRatio: t.TexturePixelRatio(),
+			Width:      size.X,
+			Height:     size.Y,
 		}
 
 		ts := &TextureSprite{
 			TextureMeta:       tm.ScaleTo(pixelRatio),
 			OriginTextureMeta: tm,
-			Image:             t.TextureImage(),
+			Image:             img,
 		}
 
 		blocks = append(blocks, NewNode(ts.Name, ts.Width, ts.Height))
@@ -85,8 +88,6 @@ func GenerateSprite(textures []Texture, pixelRatio int, renderImage bool) (map[s
 
 type Texture interface {
 	TextureName() string
-	TextureWidth() int
-	TextureHeight() int
 	TexturePixelRatio() int
 	TextureImage() image.Image
 }
