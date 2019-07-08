@@ -21,13 +21,12 @@ func GenerateSprite(textures []Texture, pixelRatio int, renderImage bool) (map[s
 		t := textures[i]
 
 		img := t.TextureImage()
-		size := img.Bounds().Size()
 
 		tm := &TextureMeta{
 			Name:       t.TextureName(),
 			PixelRatio: t.TexturePixelRatio(),
-			Width:      size.X,
-			Height:     size.Y,
+			Width:      t.TextureWidth(),
+			Height:     t.TextureHeight(),
 		}
 
 		ts := &TextureSprite{
@@ -54,18 +53,28 @@ func GenerateSprite(textures []Texture, pixelRatio int, renderImage bool) (map[s
 		set[b.Key].X = b.X
 		set[b.Key].Y = b.Y
 
-		mayMaxX := b.Width + b.X
-		mayMaxY := b.Height + b.Y
+		if renderImage {
+			mayMaxX := b.Width + b.X
+			mayMaxY := b.Height + b.Y
 
-		if mayMaxX > w {
-			w = mayMaxX
-		}
-		if mayMaxY > h {
-			h = mayMaxY
+			if mayMaxX > w {
+				w = mayMaxX
+			}
+			if mayMaxY > h {
+				h = mayMaxY
+			}
 		}
 	}
 
 	if renderImage {
+		if w == 0 {
+			w = 1
+		}
+
+		if h == 0 {
+			h = 1
+		}
+
 		dst := image.NewRGBA(image.Rect(0, 0, w, h))
 
 		for _, ts := range set {
@@ -88,6 +97,8 @@ func GenerateSprite(textures []Texture, pixelRatio int, renderImage bool) (map[s
 
 type Texture interface {
 	TextureName() string
+	TextureWidth() int
+	TextureHeight() int
 	TexturePixelRatio() int
 	TextureImage() image.Image
 }

@@ -87,6 +87,14 @@ func (m *TextureTest) TextureImage() image.Image {
 	return m.Image
 }
 
+func (m *TextureTest) TextureWidth() int {
+	return m.Image.Bounds().Size().X
+}
+
+func (m *TextureTest) TextureHeight() int {
+	return m.Image.Bounds().Size().Y
+}
+
 func SavePNG(path string, img image.Image) {
 	err := os.MkdirAll(filepath.Dir(path), os.ModePerm)
 	if err != nil {
